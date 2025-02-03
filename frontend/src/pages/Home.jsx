@@ -3,22 +3,31 @@ import { useGSAP } from "@gsap/react";
 import { useState, useEffect } from "react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
+import LocationSearchPanel from "../components/LocationSearchPanel";
+import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
+import WaitForDriver from "../components/WaitForDriver";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
 
-  const [panelOpen, setPanelOpen] = useState(false);
-  const [arrrowVisible, setarrrowVisible] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isVehiclePanelOpen, setIsVehiclePanelOpen] = useState(false);
+  const [isConfrimRideOpen, setIsConfrimRideOpen] = useState(false);
+  const [isWaitForDriverOpen, setIsWaitForDriverOpen] = useState(false);
 
   const panelRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
+  const confirmRideRef = useRef(null);
+  const waitForDriverRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
   };
 
   useGSAP(() => {
-    if (panelOpen) {
+    if (isPanelOpen) {
       gsap.to(panelRef.current, {
         height: "70%",
         duration: 0.5,
@@ -31,11 +40,47 @@ const Home = () => {
         ease: "power2.inOut",
       });
     }
-  }, [panelOpen]);
+  }, [isPanelOpen]);
+
+  useGSAP(() => {
+    if (isVehiclePanelOpen) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [isVehiclePanelOpen]);
+
+  useGSAP(() => {
+    if (isConfrimRideOpen) {
+      gsap.to(confirmRideRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(confirmRideRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [isConfrimRideOpen]);
+
+  useGSAP(() => {
+    if (isWaitForDriverOpen) {
+      gsap.to(waitForDriverRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(waitForDriverRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [isWaitForDriverOpen]);
 
   useEffect(() => {
     // This will ensure the panel state is updated before the animation runs
-  }, [panelOpen]);
+  }, [isPanelOpen, isVehiclePanelOpen]);
 
   return (
     <div className="h-screen">
@@ -59,10 +104,10 @@ const Home = () => {
             <h4 className="text-2xl font-semibold p-2">Find a trip</h4>
 
             {/* Arrow icon on the right */}
-            {panelOpen ? (
+            {isPanelOpen ? (
               <i
                 onClick={() => {
-                  setPanelOpen(false);
+                  setIsPanelOpen(false);
                 }}
                 className="ri-arrow-down-s-line"
               ></i>
@@ -80,8 +125,7 @@ const Home = () => {
             <input
               value={pickup}
               onChange={(e) => {
-                setPanelOpen(true);
-                console.log("panelOpen", panelOpen);
+                setIsPanelOpen(true);
                 setPickup(e.target.value);
               }}
               className="bg-[#eee] px-12 py-4  text-base rounded-lg w-full mt-5"
@@ -92,8 +136,7 @@ const Home = () => {
             <input
               value={destination}
               onChange={(e) => {
-                console.log("panelOpen", panelOpen);
-                setPanelOpen(true);
+                setIsPanelOpen(true);
                 setDestination(e.target.value);
               }}
               type="text"
@@ -102,7 +145,45 @@ const Home = () => {
             />
           </form>
         </div>
-        <div ref={panelRef} className="h-0 bg-red-600"></div>
+
+        <div ref={panelRef} className="h-0 bg-white">
+          <LocationSearchPanel
+            isPanelOpen={isPanelOpen}
+            setIsPanelOpen={setIsPanelOpen}
+            vehiclePanel={isVehiclePanelOpen}
+            setVehiclePanel={setIsVehiclePanelOpen}
+          />
+        </div>
+
+        <div
+          ref={vehiclePanelRef}
+          className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
+        >
+          <VehiclePanel
+            setIsConfrimRideOpen={setIsConfrimRideOpen}
+            setIsVehiclePanelOpen={setIsVehiclePanelOpen}
+          />
+        </div>
+
+        <div
+          ref={confirmRideRef}
+          className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
+        >
+          <ConfirmRide
+            setIsConfrimRideOpen={setIsConfrimRideOpen}
+            setIsWaitForDriverOpen={setIsWaitForDriverOpen}
+          />
+        </div>
+
+        <div
+          ref={waitForDriverRef}
+          className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
+        >
+          <WaitForDriver
+            setIsWaitForDriverOpen={setIsWaitForDriverOpen}
+            setIsConfrimRideOpen={setIsConfrimRideOpen}
+          />
+        </div>
       </div>
     </div>
   );
