@@ -17,7 +17,7 @@ const Home = () => {
   const [isVehiclePanelOpen, setIsVehiclePanelOpen] = useState(false);
   const [isConfrimRideOpen, setIsConfrimRideOpen] = useState(false);
   const [isWaitForDriverOpen, setIsWaitForDriverOpen] = useState(false);
-  const [isDriverDetailsOpen, setIsDriverDetailsOpen] = useState(true);
+  const [isDriverDetailsOpen, setIsDriverDetailsOpen] = useState(false);
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);

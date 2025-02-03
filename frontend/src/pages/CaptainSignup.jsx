@@ -218,7 +218,7 @@ const CaptainSignup = () => {
           )}
 
           <button className="bg-[#111] w-full text-white font-semibold mb-5 rounded px-4 py-2 md-0">
-            Login
+            Create Account
           </button>
         </form>
         <div>

@@ -61,7 +61,7 @@ const VehiclePanel = (props) => {
           <div className="flex flex-row">
             <h4 className="font-medium text-xl">Uber Moto</h4>
             <h3 className="mx-3 font-medium text-l">
-              <i class="ri-user-fill"></i> 1
+              <i className="ri-user-fill"></i> 1
             </h3>
           </div>
 
@@ -87,7 +87,7 @@ const VehiclePanel = (props) => {
           <div className="flex flex-row">
             <h4 className="font-medium text-xl">Uber Auto</h4>
             <h3 className="mx-3 font-medium text-l">
-              <i class="ri-user-fill"></i> 3
+              <i className="ri-user-fill"></i> 3
             </h3>
           </div>
 

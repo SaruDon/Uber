@@ -58,7 +58,7 @@ const DriverDetails = (props) => {
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
       <div className="flex flex-rows m-1">
         <h3 className="font-medium text-xl p-5">
-          <i class="ri-cash-line"></i>{" "}
+          <i className="ri-cash-line"></i>{" "}
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold">₹193.20</h3>
