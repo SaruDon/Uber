@@ -1,17 +1,17 @@
 import React from "react";
 
-const WaitForDriver = () => {
+const WaitForDriver = (props) => {
   return (
     <div>
       <h5
         onClick={() => {
-          props.setIsConfrimRideOpen(false);
+          props.setIsWaitForDriverOpen(false);
         }}
         className="text-center "
       >
         <i className="text-2xl ri-arrow-down-s-line"></i>
       </h5>
-      <h1 className="text-2xl font-bold mb-5">Confirm your ride</h1>
+      <h1 className="text-2xl font-bold mb-5">Conneting to Driver</h1>
       <div className="flex align-middle m-1">
         <img
           className="w-13"

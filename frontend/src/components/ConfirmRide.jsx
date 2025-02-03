@@ -5,7 +5,7 @@ const ConfirmRide = (props) => {
     <div>
       <h5
         onClick={() => {
-          props.setIsWaitForDriverOpen(true);
+          props.setIsConfrimRideOpen(false);
         }}
         className="text-center "
       >

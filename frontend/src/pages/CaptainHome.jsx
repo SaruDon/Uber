@@ -20,7 +20,6 @@ const CaptainHome = () => {
 
   useGSAP(() => {
     if (isRidePopUpOpen) {
-      console.log("isRidePopUpOpen", isRidePopUpOpen);
       gsap.to(ridePopUpRef.current, {
         transform: "translateY(0)",
       });
@@ -33,7 +32,6 @@ const CaptainHome = () => {
 
   useGSAP(() => {
     if (isConfimRidePopupOpen) {
-      console.log("isRidePopUpOpen", isRidePopUpOpen);
       gsap.to(comfirmRidePopUpRef.current, {
         transform: "translateY(0)",
       });

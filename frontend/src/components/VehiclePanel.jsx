@@ -5,8 +5,6 @@ const VehiclePanel = (props) => {
     props.setIsVehiclePanelOpen(false);
   };
 
-  console.log("props", props);
-
   return (
     <div>
       <h5
