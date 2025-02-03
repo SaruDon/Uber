@@ -7,6 +7,7 @@ import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import WaitForDriver from "../components/WaitForDriver";
+import DriverDetails from "../components/DriverDetails";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -16,11 +17,13 @@ const Home = () => {
   const [isVehiclePanelOpen, setIsVehiclePanelOpen] = useState(false);
   const [isConfrimRideOpen, setIsConfrimRideOpen] = useState(false);
   const [isWaitForDriverOpen, setIsWaitForDriverOpen] = useState(false);
+  const [isDriverDetailsOpen, setIsDriverDetailsOpen] = useState(true);
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
   const confirmRideRef = useRef(null);
   const waitForDriverRef = useRef(null);
+  const driverDetailsRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -77,6 +80,18 @@ const Home = () => {
       });
     }
   }, [isWaitForDriverOpen]);
+
+  useGSAP(() => {
+    if (isDriverDetailsOpen) {
+      gsap.to(driverDetailsRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(driverDetailsRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [isDriverDetailsOpen]);
 
   useEffect(() => {
     // This will ensure the panel state is updated before the animation runs
@@ -183,6 +198,13 @@ const Home = () => {
             setIsWaitForDriverOpen={setIsWaitForDriverOpen}
             setIsConfrimRideOpen={setIsConfrimRideOpen}
           />
+        </div>
+
+        <div
+          ref={driverDetailsRef}
+          className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
+        >
+          <DriverDetails setIsDriverDetailsOpen={setIsDriverDetailsOpen} />
         </div>
       </div>
     </div>
