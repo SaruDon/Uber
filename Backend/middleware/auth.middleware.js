@@ -25,9 +25,9 @@ module.exports.authUser = async (req, res, next) => {
 
     try {
         // Verify and decode the JWT token to get user ID
-        console.log('Verifying Token:', token);
+        // console.log('Verifying Token:', token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] }); 
-        console.log('Decoded Token:', decoded);
+        // console.log('Decoded Token:', decoded);
 
         // Find user based on decoded user ID from token
         const user = await userModel.findById(decoded._id);
