@@ -7,7 +7,8 @@ const captainModel = require('../models/captain.model');
 module.exports.authUser = async (req, res, next) => {
     // Extract token from either cookies or Authorization header
     const authHeader = req.headers.authorization;
-    const token = req.cookies.token || (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]);
+    const token = req.cookies.token ||  (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]);
+
 
     console.log('Received Token:', token);
 

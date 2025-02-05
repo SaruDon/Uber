@@ -3,11 +3,12 @@ import { useGSAP } from "@gsap/react";
 import { useState, useEffect } from "react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
-import LocationSearchPanel from "../components/LocationSearchPanel";
-import VehiclePanel from "../components/VehiclePanel";
-import ConfirmRide from "../components/ConfirmRide";
-import WaitForDriver from "../components/WaitForDriver";
-import DriverDetails from "../components/DriverDetails";
+import LocationSearchPanel from "../../components/User/LocationSearchPanel";
+import VehiclePanel from "../../components/VehiclePanel";
+import ConfirmRide from "../../components/ConfirmRide";
+import WaitForDriver from "../../components/WaitForDriver";
+import DriverDetails from "../../components/DriverDetails";
+import axios from "axios";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -19,6 +20,11 @@ const Home = () => {
   const [isWaitForDriverOpen, setIsWaitForDriverOpen] = useState(false);
   const [isDriverDetailsOpen, setIsDriverDetailsOpen] = useState(false);
 
+  const [activeField, setActiveField] = useState(null);
+  const [pickupSuggestedLocations, setpickupSuggestedLocations] = useState([]);
+  const [destinationSuggestedLocations, setDestinationSuggestedLocations] =
+    useState([]);
+
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
   const confirmRideRef = useRef(null);
@@ -27,6 +33,60 @@ const Home = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+  };
+
+  // const handlePickupChange = async (e) => {
+  //   const value = e.target.value;
+
+  //   // Don't call API if input is empty
+  //   if (!value.trim()) {
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+  //       {
+  //         params: { address: value }, // ✅ Sent as query parameter
+  //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //       }
+  //     );
+  //     setpickupSuggestedLocations(response.data);
+  //   } catch (error) {
+  //     console.log("error", error);
+  //   }
+  // };
+
+  const handlePickupChange = async (e) => {
+    setPickup(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { address: e.target.value }, // ✅ Sent as query parameter
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setpickupSuggestedLocations(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleDestinationChange = async (e) => {
+    setDestination(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { address: e.target.value }, // ✅ Sent as query parameter
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setDestinationSuggestedLocations(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   useGSAP(() => {
@@ -140,6 +200,8 @@ const Home = () => {
             <input
               value={pickup}
               onChange={(e) => {
+                handlePickupChange(e);
+                setActiveField("pickup");
                 setIsPanelOpen(true);
                 setPickup(e.target.value);
               }}
@@ -151,6 +213,8 @@ const Home = () => {
             <input
               value={destination}
               onChange={(e) => {
+                handleDestinationChange(e);
+                setActiveField("destination");
                 setIsPanelOpen(true);
                 setDestination(e.target.value);
               }}
@@ -163,10 +227,18 @@ const Home = () => {
 
         <div ref={panelRef} className="h-0 bg-white">
           <LocationSearchPanel
+            suggestions={
+              activeField === "pickup"
+                ? pickupSuggestedLocations
+                : destinationSuggestedLocations
+            }
+            activeField={activeField}
+            setPickup={setPickup}
+            setDestination={setDestination}
             isPanelOpen={isPanelOpen}
             setIsPanelOpen={setIsPanelOpen}
             vehiclePanel={isVehiclePanelOpen}
-            setVehiclePanel={setIsVehiclePanelOpen}
+            setIsVehiclePanel={setIsVehiclePanelOpen}
           />
         </div>
 

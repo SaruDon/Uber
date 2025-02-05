@@ -7,7 +7,7 @@ import CaptainLogin from "./pages/CaptainLogin";
 import CaptainSignup from "./pages/CaptainSignup";
 import UserLogout from "./pages/UserLogout";
 import { UserDataContext } from "./context/UserContext";
-import Home from "./pages/Home";
+import Home from "./pages/User/Home";
 import UserProtectWrapper from "./pages/UserProtectWrapper";
 import CaptainProtectWrapper from "./pages/CaptainProtectWrapper";
 import CaptainHome from "./pages/CaptainHome";

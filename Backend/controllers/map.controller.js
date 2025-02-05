@@ -27,6 +27,7 @@ module.exports.getCoordinates = async (req, res, next) => {
 module.exports.getSuggestionsController =async (req,res, next)=>{
   const  errors = validationResult(req)
   if (!errors.isEmpty()) {
+    console.log('Erorr')
     return res.status(400).json({message:errors.array()})
   }
   const { address } = req.query;
@@ -37,8 +38,8 @@ module.exports.getSuggestionsController =async (req,res, next)=>{
   }
 
   try {
-    const coordinates = await mapService.getAddressCoordinates(address);
-    res.status(200).json(coordinates);
+    const locations = await mapService.getAddressCoordinates(address);
+    res.status(200).json(locations);
   } catch (error) {
     console.log('error.res', error)
     res.status(404).json({message:'Coordinate not found'});
