@@ -1,14 +1,17 @@
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
+import { useContext } from "react";
 import { useState, useEffect } from "react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
 import LocationSearchPanel from "../../components/User/LocationSearchPanel";
-import VehiclePanel from "../../components/VehiclePanel";
-import ConfirmRide from "../../components/ConfirmRide";
-import WaitForDriver from "../../components/WaitForDriver";
-import DriverDetails from "../../components/DriverDetails";
+import VehiclePanel from "../../components/User/VehiclePanel";
+import ConfirmRide from "../../components/User/ConfirmRide";
+import WaitForDriver from "../../components/User/WaitForDriver";
+import DriverDetails from "../../components/User/DriverDetails";
 import axios from "axios";
+import { SocketContext } from "../../context/SocketContext";
+import { UserDataContext } from "../../context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -24,6 +27,17 @@ const Home = () => {
   const [pickupSuggestedLocations, setpickupSuggestedLocations] = useState([]);
   const [destinationSuggestedLocations, setDestinationSuggestedLocations] =
     useState([]);
+
+  const [fare, setFare] = useState();
+  const [amountPayable, setAmountPayable] = useState();
+  const [vehicleType, setVehicleType] = useState(null);
+
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -88,6 +102,38 @@ const Home = () => {
       console.log("error", error);
     }
   };
+
+  async function findATrip() {
+    setIsPanelOpen(false);
+    setIsVehiclePanelOpen(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/ride/get-fare`,
+        {
+          params: { pickup, destination }, // ✅ Sent as query parameter
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      console.log("response", response.data);
+      setFare(response.data);
+    } catch (error) {}
+  }
+
+  async function createRide() {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/ride/create`,
+        { pickup, destination, vehicleType },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+        // ✅ Sent as query parameter
+      );
+      console.log("response", response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   useGSAP(() => {
     if (isPanelOpen) {
@@ -174,7 +220,7 @@ const Home = () => {
 
       <div className="flex flex-col justify-end  h-screen  absolute top-0 w-full ">
         <div className="flex flex-col justify-center items-center h-[30%] bg-white p-3 relative rounded-3xl">
-          <div className="flex flex-row justify-between items-center w-full">
+          <div className="flex flex-row justify-between items-center w-full mt-2">
             {/* "Find a trip" on the left */}
             <h4 className="text-2xl font-semibold p-2">Find a trip</h4>
 
@@ -222,6 +268,14 @@ const Home = () => {
               placeholder="Enter your destination"
               className="bg-[#eee] px-12 py-4 mt-5 mb-3 text-base rounded-lg w-full"
             />
+            <button
+              onClick={() => {
+                findATrip();
+              }}
+              className="bg-[#3d3d3d] w-full text-white font-semibold rounded px-4 py-4 my-2 text-center"
+            >
+              <p className="text-white">Find Trip</p>
+            </button>
           </form>
         </div>
 
@@ -247,6 +301,9 @@ const Home = () => {
           className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
         >
           <VehiclePanel
+            setAmountPayable={setAmountPayable}
+            fare={fare}
+            setVehicleType={setVehicleType}
             setIsConfrimRideOpen={setIsConfrimRideOpen}
             setIsVehiclePanelOpen={setIsVehiclePanelOpen}
           />
@@ -257,6 +314,10 @@ const Home = () => {
           className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
         >
           <ConfirmRide
+            createRide={createRide}
+            amountPayable={amountPayable}
+            pickup={pickup}
+            destination={destination}
             setIsConfrimRideOpen={setIsConfrimRideOpen}
             setIsWaitForDriverOpen={setIsWaitForDriverOpen}
           />
@@ -267,6 +328,9 @@ const Home = () => {
           className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
         >
           <WaitForDriver
+            amountPayable={amountPayable}
+            pickup={pickup}
+            destination={destination}
             setIsWaitForDriverOpen={setIsWaitForDriverOpen}
             setIsConfrimRideOpen={setIsConfrimRideOpen}
           />

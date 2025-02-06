@@ -24,6 +24,8 @@ function parseDurationToSeconds(formattedDuration) {
 async function getFare(pickup, destination) {
   try {
       // 1. Validate input
+      console.log('????????pickup', pickup)
+      console.log('??????????destination', destination)
       if (!pickup || !destination) {
           throw new Error('Both pickup and destination addresses are required');
       }
@@ -32,11 +34,17 @@ async function getFare(pickup, destination) {
       const pickupCoordinates = await mapService.getAddressCoordinates(pickup);
       const destinationCoordinates = await mapService.getAddressCoordinates(destination);
 
+      console.log('pickupCoordinates', pickupCoordinates)
 
-      const pickupCoordinatesLat = pickupCoordinates[0].location[0];
-      const pickupCoordinatesLon = pickupCoordinates[0].location[1];
-      const destinationCoordinatesLat = destinationCoordinates[0].location[0];
-      const destinationCoordinatesLon = destinationCoordinates[0].location[1];
+      const pickupCoordinatesLat = pickupCoordinates[0];
+      const pickupCoordinatesLon = pickupCoordinates[1];
+      const destinationCoordinatesLat = destinationCoordinates[0];
+      const destinationCoordinatesLon = destinationCoordinates[1];
+
+      console.log('pickupCoordinates:', pickupCoordinatesLat); // Logs: 40.7128
+      console.log('pickupCoordinatesLon:', pickupCoordinatesLon); // Logs: -74.0060
+      console.log('destinationCoordinatesLat:', destinationCoordinatesLat); // Logs: 34.0522
+      console.log('destinationCoordinatesLon:', destinationCoordinatesLon); // Logs: -118.2437
 
       // Pass coordinates as arrays in the correct order: [longitude, latitude]
       const routeData = await mapService.getDistanceAndTimeService(
@@ -44,6 +52,7 @@ async function getFare(pickup, destination) {
         [destinationCoordinatesLat, destinationCoordinatesLon] // Correct order: [longitude, latitude]
       );
 
+      console.log('routeData', routeData)
 
       const distanceKm = routeData.distance; // Already in kilometers
       const durationInSeconds = parseDurationToSeconds(routeData.duration); // Convert formatted duration to seconds
@@ -118,4 +127,7 @@ module.exports.createRideService = async ({user,pickup,destination,vehicle})=>{
 
    return ride
 }
-
+ 
+module.exports.getFareService = async (pickup,destination) => {
+   return await getFare(pickup,destination)
+}

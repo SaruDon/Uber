@@ -4,6 +4,7 @@ const VehiclePanel = (props) => {
   const submit = (e) => {
     props.setIsVehiclePanelOpen(false);
   };
+  console.log("props", props);
 
   return (
     <div>
@@ -19,13 +20,15 @@ const VehiclePanel = (props) => {
 
       <div
         onClick={() => {
+          props.setVehicleType("car");
+          props.setAmountPayable(props.fare.car);
           props.setIsVehiclePanelOpen(false);
           props.setIsConfrimRideOpen(true);
         }}
         className="flex mb-2 w-full active:border-2 border-black p-3 rounded-xl items-center justify-between"
       >
         <img
-          className="h-14"
+          className="h-14 m-4"
           src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_552,w_552/v1555367310/assets/30/51e602-10bb-4e65-b122-e394d80a9c47/original/Final_UberX.png"
           alt=""
         />
@@ -40,11 +43,15 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-l">2 mins away</h5>
           <p className="font-medium text-l">Affordable,Compact rides</p>
         </div>
-        <h2 className="text-2xl font-semibold">₹193.20</h2>
+        <h2 className="text-2xl font-semibold">
+          {props.fare?.car !== undefined ? props.fare.car.toFixed(1) : "N/A"}
+        </h2>{" "}
       </div>
 
       <div
         onClick={() => {
+          props.setVehicleType("bike");
+          props.setAmountPayable(props.fare.bike);
           props.setIsVehiclePanelOpen(false);
           props.setIsConfrimRideOpen(true);
         }}
@@ -66,11 +73,15 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-l">2 mins away</h5>
           <p className="font-medium text-l">Affordable moter cycle rides </p>
         </div>
-        <h2 className="text-2xl font-semibold">₹65.20</h2>
+        <h2 className="text-2xl font-semibold">
+          {props.fare?.bike !== undefined ? props.fare.bike.toFixed(1) : "N/A"}
+        </h2>{" "}
       </div>
 
       <div
         onClick={() => {
+          props.setVehicleType("auto");
+          props.setAmountPayable(props.fare.auto);
           props.setIsVehiclePanelOpen(false);
           props.setIsConfrimRideOpen(true);
         }}
@@ -92,7 +103,9 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-l">2 mins away</h5>
           <p className="font-medium text-l">Affordable auto cycle rides </p>
         </div>
-        <h2 className="text-2xl font-semibold">₹120.20</h2>
+        <h2 className="text-2xl font-semibold">
+          {props.fare?.auto !== undefined ? props.fare.auto.toFixed(1) : "N/A"}
+        </h2>{" "}
       </div>
     </div>
   );

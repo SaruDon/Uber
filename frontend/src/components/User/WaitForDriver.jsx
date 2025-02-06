@@ -24,8 +24,8 @@ const WaitForDriver = (props) => {
           <i className="fron ri-map-pin-4-fill"></i>
         </h3>
         <div>
-          <h3 className="text-xl pt-2 font-semibold m-1">562/11A</h3>
-          <h2 className="text-lg">Kaikondrahali ,Bengluru, Karnataka</h2>
+          <h3 className="text-xl pt-2 font-semibold m-1">{props.pickup}</h3>
+          <h2 className="text-lg">{props.pickup}</h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -34,11 +34,8 @@ const WaitForDriver = (props) => {
           <i className="ri-square-fill"></i>{" "}
         </h3>
         <div>
-          <h3 className="text-xl pt-2 font-semibold">562/11A</h3>
-          <h2 className="text-lg">
-            Kaikondrahali ,Bengluru, Karnataka Kaikondrahali ,Bengluru,
-            Karnataka
-          </h2>
+          <h3 className="text-xl pt-2 font-semibold">{props.destination}</h3>
+          <h2 className="text-lg">{props.destination}</h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -47,7 +44,11 @@ const WaitForDriver = (props) => {
           <i className="ri-cash-line"></i>{" "}
         </h3>
         <div>
-          <h3 className="text-xl pt-2 font-semibold">₹193.20</h3>
+          <h3 className="text-xl pt-2 font-semibold">
+            {props?.amountPayable !== undefined
+              ? props.amountPayable.toFixed(1)
+              : "N/A"}
+          </h3>
           <h2 className="text-lg">Cash</h2>
         </div>
       </div>

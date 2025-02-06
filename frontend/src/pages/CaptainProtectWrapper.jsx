@@ -28,7 +28,7 @@ const CaptainProtectWrapper = ({ children }) => {
         );
 
         if (response.status === 200) {
-          setCaptain(response.data.captain);
+          setCaptain(response.data);
         } else {
           throw new Error("Invalid response status");
         }

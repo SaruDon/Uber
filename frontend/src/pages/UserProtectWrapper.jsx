@@ -28,7 +28,7 @@ const UserProtectWrapper = ({ children }) => {
           }
         );
         if (response.status === 200) {
-          setUser(response.data.user);
+          setUser(response.data);
         } else {
           throw new Error("Invalid res status");
         }

@@ -1,6 +1,33 @@
 const axios = require('axios');
+const captainModel = require('../models/captain.model')
 
 module.exports.getAddressCoordinates = async (address) => {
+  try {
+    const responseNominatim = await axios.get(process.env.NOMINATIM_URL, {
+      params: {
+        q: address,
+        format: 'json',
+        limit: 1
+      }
+    });
+
+    if (responseNominatim.data.length === 0) {
+      throw new Error('Address not found');
+    }
+
+    // Extract latitude and longitude as numbers
+    const lat = parseFloat(responseNominatim.data[0].lat);
+    const lon = parseFloat(responseNominatim.data[0].lon);
+
+    // Return in the format [longitude, latitude]
+    return [lon, lat];
+  } catch (error) {
+    console.error('Error in getAddressCoordinates:', error.message);
+    throw error;
+  }
+};
+
+module.exports.getAddress = async (address) => {
   try {
     // Step 1: Use Nominatim to get the latitude and longitude of the address
     const responseNominatim = await axios.get(process.env.NOMINATIM_URL, {
@@ -33,10 +60,11 @@ module.exports.getAddressCoordinates = async (address) => {
     const suggestedNames = responseOSRM.data.waypoints.map(waypoint => waypoint.name);
     return suggestedNames;
   } catch (error) {
-    console.error('Error in getAddressCoordinates:', error.message);
+    console.error('Error in :', error.message);
     throw error; // Rethrow the error to be handled by the caller
   }
 };
+
 
 
 module.exports.getDistanceAndTimeService = async (origin, destination) => {
@@ -89,3 +117,24 @@ module.exports.getDistanceAndTimeService = async (origin, destination) => {
     throw new Error(error.response?.data?.message || "OSRM API error");
   }
 };
+
+
+module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
+
+  // radius in km
+
+
+  const captains = await captainModel.find({
+      location: {
+          $geoWithin: {
+              $centerSphere: [ [ ltd, lng ], radius / 6371 ]
+          }
+      }
+  });
+
+  console.log('captainsModel', captains)
+
+  return captains;
+
+
+}

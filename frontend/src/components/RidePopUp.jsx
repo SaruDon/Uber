@@ -1,6 +1,22 @@
 import React from "react";
 
 const RidePopUp = (props) => {
+  if (!props.ride) {
+    return (
+      <div>
+        <h5
+          onClick={() => {
+            props.setIsRidePopUpOpen(false);
+          }}
+          className="text-center "
+        >
+          <i className="text-2xl ri-arrow-down-s-line"></i>
+        </h5>
+        <div className="p-3">Loading ride details...</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h5
@@ -33,7 +49,7 @@ const RidePopUp = (props) => {
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold m-1">562/11A</h3>
-          <h2 className="text-lg">Kaikondrahali ,Bengluru, Karnataka</h2>
+          <h2 className="text-lg">{props.ride?.pickup ?? "Loading..."}</h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -43,10 +59,7 @@ const RidePopUp = (props) => {
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold">562/11A</h3>
-          <h2 className="text-lg">
-            Kaikondrahali ,Bengluru, Karnataka Kaikondrahali ,Bengluru,
-            Karnataka
-          </h2>
+          <h2 className="text-lg">{props.ride?.destination ?? "Loading..."}</h2>
         </div>
       </div>
       <button

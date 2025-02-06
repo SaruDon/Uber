@@ -14,7 +14,7 @@ module.exports.getCoordinates = async (req, res, next) => {
   }
 
   try {
-    const coordinates = await mapService.getAddressCoordinates(address);
+    const coordinates = await mapService.getAddressCoordinates(address); //! Chnage to get Coordinates
     const latitude= coordinates[0].location[0];
     const longitude =coordinates[0].location[1]
     res.status(200).json({latitude,longitude});
@@ -38,7 +38,7 @@ module.exports.getSuggestionsController =async (req,res, next)=>{
   }
 
   try {
-    const locations = await mapService.getAddressCoordinates(address);
+    const locations = await mapService.getAddress(address); 
     res.status(200).json(locations);
   } catch (error) {
     console.log('error.res', error)

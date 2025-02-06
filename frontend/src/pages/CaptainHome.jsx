@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import { useState, useEffect, useRef } from "react";
@@ -7,16 +7,64 @@ import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
 import "remixicon/fonts/remixicon.css";
 import ConfimRidePopUp from "../components/ConfimRidePopUp";
-import ConfirmRide from "../components/ConfirmRide";
+import { CaptainDataContext } from "../context/CaptainContext";
+import { SocketContext } from "../context/SocketContext";
+import { pick } from "../../node_modules/engine.io-client/build/esm-debug/util";
 
 const CaptainHome = () => {
-  const [isRidePopUpOpen, setIsRidePopUpOpen] = useState(true);
+  const [isRidePopUpOpen, setIsRidePopUpOpen] = useState(false);
+
+  const [pickUp, setpickUp] = useState("");
+  const [destination, setDestination] = useState("");
+  const [ride, setRide] = useState();
 
   const ridePopUpRef = useRef(null);
+
+  const [loading, setLoading] = useState(true);
 
   const [isConfimRidePopupOpen, setIsConfimRidePopupOpen] = useState(false);
 
   const comfirmRidePopUpRef = useRef(null);
+
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(CaptainDataContext);
+
+  socket.on("new-ride", (data) => {
+    console.log("data", data);
+    setIsRidePopUpOpen(true);
+  });
+
+  useEffect(() => {
+    console.log("captain", captain);
+    if (!captain?._id) return;
+
+    socket.emit("join", { userType: "captain", userId: captain._id });
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          console.log({
+            userId: captain._id,
+            location: {
+              ltd: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+          socket.emit("update-location-captain", {
+            userId: captain._id,
+            location: {
+              ltd: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+        });
+      }
+    };
+
+    const locationInterval = setInterval(updateLocation, 10000);
+    updateLocation();
+    setLoading(false); // Set loading to false once the data is fetched
+  }, [captain]);
 
   useGSAP(() => {
     if (isRidePopUpOpen) {
@@ -73,6 +121,7 @@ const CaptainHome = () => {
         className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
       >
         <RidePopUp
+          ride={ride}
           setIsRidePopUpOpen={setIsRidePopUpOpen}
           setIsConfimRidePopupOpen={setIsConfimRidePopupOpen}
         />

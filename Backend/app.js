@@ -4,6 +4,8 @@ const cors = require('cors')
 const express = require ('express')
 const app = express()
 const connectToDb = require('./db/db')
+const { initializeSocket, sendMessageToSocketId } = require('./socket.js');
+
 
 const mapRoutes = require('./routes/maps.routes')
 const userRoutes = require('./routes/user.routes')
@@ -20,6 +22,10 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
 connectToDb();
+
+// Usage example in app.js
+initializeSocket();
+sendMessageToSocketId('specificSocketID', 'Hello');
 
 app.get('/',(req,res)=>{ 
   res.send('Hello')

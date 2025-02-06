@@ -25,7 +25,9 @@ const ConfirmRide = (props) => {
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold m-1">562/11A</h3>
-          <h2 className="text-lg">Kaikondrahali ,Bengluru, Karnataka</h2>
+          <h2 className="text-lg">
+            {props.pickup !== undefined ? props.pickup : "N/A"}
+          </h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -35,10 +37,7 @@ const ConfirmRide = (props) => {
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold">562/11A</h3>
-          <h2 className="text-lg">
-            Kaikondrahali ,Bengluru, Karnataka Kaikondrahali ,Bengluru,
-            Karnataka
-          </h2>
+          {props.destination !== undefined ? props.destination : "N/A"}
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -47,12 +46,17 @@ const ConfirmRide = (props) => {
           <i className="ri-cash-line"></i>{" "}
         </h3>
         <div>
-          <h3 className="text-xl pt-2 font-semibold">₹193.20</h3>
+          <h3 className="text-xl pt-2 font-semibold">
+            {props?.amountPayable !== undefined
+              ? props.amountPayable.toFixed(1)
+              : "N/A"}
+          </h3>
           <h2 className="text-lg">Cash</h2>
         </div>
       </div>
       <button
         onClick={() => {
+          props.createRide();
           props.setIsConfrimRideOpen(false);
           props.setIsWaitForDriverOpen(true);
         }}
