@@ -3,6 +3,8 @@ const router = express.Router()
 const authMiddleware = require('../middleware/auth.middleware')
 const { query } = require('express-validator');
 const mapController = require('../controllers/map.controller')
+const rideController = require('../controllers/ride.controller')
+const {body} = require('express-validator')
 
 
 router.get('/get-distance-time',
