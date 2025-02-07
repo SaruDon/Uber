@@ -52,8 +52,8 @@ router.post(
     body('vehicle.vehicleType')
       .notEmpty()
       .withMessage('Vehicle type is required')
-      .isIn(['car', 'suv', 'motorcycle', 'auto', 'bus'])
-      .withMessage('Vehicle type must be one of: car, suv, motorcycle, auto, or bus'),
+      .isIn(['car', 'suv', 'bike', 'auto', 'bus'])
+      .withMessage('Vehicle type must be one of: car, suv, bike, auto, or bus'),
 
     // Location validation
   ],

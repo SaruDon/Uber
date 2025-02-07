@@ -207,7 +207,7 @@ const CaptainSignup = () => {
               </option>
               <option value="car">Car</option>
               <option value="suv">SUV</option>
-              <option value="motorcycle">Motorcycle</option>
+              <option value="bike">Motorcycle</option>
               <option value="auto">Auto</option>
               <option value="bus">Bus</option>
             </select>
@@ -218,7 +218,7 @@ const CaptainSignup = () => {
           )}
 
           <button className="bg-[#111] w-full text-white font-semibold mb-5 rounded px-4 py-2 md-0">
-            Login
+            Create Account
           </button>
         </form>
         <div>
