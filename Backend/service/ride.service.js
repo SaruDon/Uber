@@ -24,8 +24,6 @@ function parseDurationToSeconds(formattedDuration) {
 async function getFare(pickup, destination) {
   try {
       // 1. Validate input
-      console.log('????????pickup', pickup)
-      console.log('??????????destination', destination)
       if (!pickup || !destination) {
           throw new Error('Both pickup and destination addresses are required');
       }
@@ -41,10 +39,6 @@ async function getFare(pickup, destination) {
       const destinationCoordinatesLat = destinationCoordinates[0];
       const destinationCoordinatesLon = destinationCoordinates[1];
 
-      console.log('pickupCoordinates:', pickupCoordinatesLat); // Logs: 40.7128
-      console.log('pickupCoordinatesLon:', pickupCoordinatesLon); // Logs: -74.0060
-      console.log('destinationCoordinatesLat:', destinationCoordinatesLat); // Logs: 34.0522
-      console.log('destinationCoordinatesLon:', destinationCoordinatesLon); // Logs: -118.2437
 
       // Pass coordinates as arrays in the correct order: [longitude, latitude]
       const routeData = await mapService.getDistanceAndTimeService(
@@ -109,10 +103,7 @@ function getOptDigit(num) {
 
 
 module.exports.createRideService = async ({user,pickup,destination,vehicle})=>{
-    console.log('user', user)
-    console.log('pickup', pickup)
-    console.log('destination', destination)
-    console.log('vehicle', vehicle)
+
     if (!user || !pickup || !destination || !vehicle) {
         throw new Error("All fields must be filled out");
       }
@@ -130,4 +121,99 @@ module.exports.createRideService = async ({user,pickup,destination,vehicle})=>{
  
 module.exports.getFareService = async (pickup,destination) => {
    return await getFare(pickup,destination)
+}
+
+
+module.exports.confirmRide = async (rideId, captain) => {
+  // Validate parameters
+  if (!rideId) throw new Error('Ride ID is required');
+  if (!captain?._id) throw new Error('Captain information is incomplete');
+
+  try {
+    // Update ride with proper ID usage
+    const updatedRide = await rideModel.findOneAndUpdate(
+      { _id: rideId },  // Correct ID usage
+      { 
+        status: 'accepted',
+        captain: captain._id 
+      },
+      { new: true }  // Return updated document
+    ).populate('user').populate('captain').populate('otp');
+
+    console.log('Ride accepted updatedRide', updatedRide)
+
+    if (!updatedRide) {
+      throw new Error('Ride not found');
+    }
+
+    return updatedRide;
+  } catch (error) {
+    console.error('Service Error:', error);
+    throw error;  // Re-throw for controller to handle
+  }
+};
+
+
+module.exports.startRide = async ({ rideId, otp, captain }) => {
+  if (!rideId || !otp) {
+      throw new Error('Ride id and OTP are required');
+  }
+
+  const ride = await rideModel.findOne({
+      _id: rideId
+  }).populate('user').populate('captain').select('+otp');
+
+
+  if (!ride) {
+      throw new Error('Ride not found');
+  }
+
+  if (ride.status !== 'accepted') {  
+      throw new Error('Ride not accepted');
+  }
+
+  const parsedOtp = parseInt(otp, 10);
+  if (ride.otp !== parsedOtp) { // Now both are numbers
+    console.log('ride.otp (type)', typeof ride.otp, ride.otp);
+    console.log('parsedOtp (type)', typeof parsedOtp, parsedOtp);
+    throw new Error('Invalid OTP');
+  }
+
+  await rideModel.findOneAndUpdate({
+      _id: rideId
+  }, {
+      status: 'ongoing'
+  })
+
+  return ride;
+}
+
+module.exports.endRide = async ({ rideId, captain }) => {
+  if (!rideId) {
+      console.log('rideId Not present');
+      throw new Error('Ride id is required');
+  }
+
+  const ride = await rideModel.findOne({
+      _id: rideId,
+      captain: captain._id
+  }).populate('user').populate('captain').select('+otp');
+  console.log('rideEnd', ride)
+  if (!ride) {
+      throw new Error('Ride not found');
+  }
+
+  if (ride.status !== 'ongoing') {
+    console.log('rideStaus', rideStaus)
+      throw new Error('Ride not ongoing');
+  }
+
+  const resp = await rideModel.findOneAndUpdate({
+      _id: rideId
+  }, {
+      status: 'completed'
+  })
+  console.log('rideEnd status updated to completed', resp)
+
+  return ride;
 }

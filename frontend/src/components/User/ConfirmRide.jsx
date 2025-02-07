@@ -1,6 +1,7 @@
 import React from "react";
 
 const ConfirmRide = (props) => {
+  console.log("confirm ride popUP", props.ride);
   return (
     <div>
       <h5

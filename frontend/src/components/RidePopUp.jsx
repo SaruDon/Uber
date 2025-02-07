@@ -1,22 +1,6 @@
 import React from "react";
 
 const RidePopUp = (props) => {
-  if (!props.ride) {
-    return (
-      <div>
-        <h5
-          onClick={() => {
-            props.setIsRidePopUpOpen(false);
-          }}
-          className="text-center "
-        >
-          <i className="text-2xl ri-arrow-down-s-line"></i>
-        </h5>
-        <div className="p-3">Loading ride details...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h5
@@ -39,7 +23,9 @@ const RidePopUp = (props) => {
           <h1 className="font-semibold text-lg">Sarvesh Khamkar</h1>
         </div>
         <div>
-          <h3 className="pl-4 font-semibold text-2xl">₹120.20</h3>
+          <h3 className="pl-4 font-semibold text-2xl">
+            ₹{props.ride?.fare.toFixed(1) ?? "Loading.."}
+          </h3>
           <p className="pl-4 text-sm">5 Rs/km</p>
         </div>
       </div>
@@ -64,6 +50,7 @@ const RidePopUp = (props) => {
       </div>
       <button
         onClick={() => {
+          props.confimRide();
           props.setIsRidePopUpOpen(false);
           props.setIsConfimRidePopupOpen(true);
         }}

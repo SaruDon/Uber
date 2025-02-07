@@ -75,10 +75,7 @@ module.exports.getDistanceAndTimeService = async (origin, destination) => {
     const [originLon, originLat] = origin; // Ensure correct order (longitude first)
     const [destinationLon, destinationLat] = destination;
 
-    console.log('originLon', originLon);
-    console.log('originLat', originLat);
-    console.log('destinationLon', destinationLon);
-    console.log('destinationLat', destinationLat);
+
 
     const response = await axios.get(
       `${process.env.OSRM_ROUTE_URL}/${originLon},${originLat};${destinationLon},${destinationLat}`,
@@ -109,8 +106,8 @@ module.exports.getDistanceAndTimeService = async (origin, destination) => {
     // Format the duration in DD:HH:MM:SS format
     const formattedDuration = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     const distance = route.distance / 1000;
-    console.log('**distance', distance);
-    console.log('**duration', formattedDuration);
+    console.log('distance', distance);
+    console.log('duration', formattedDuration);
     return { duration: formattedDuration, distance };
   } catch (error) {
     console.error('OSRM API Error:', error.response?.data?.message || "OSRM API error");

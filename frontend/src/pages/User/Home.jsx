@@ -12,6 +12,7 @@ import DriverDetails from "../../components/User/DriverDetails";
 import axios from "axios";
 import { SocketContext } from "../../context/SocketContext";
 import { UserDataContext } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -31,9 +32,12 @@ const Home = () => {
   const [fare, setFare] = useState();
   const [amountPayable, setAmountPayable] = useState();
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState();
 
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserDataContext);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id });
@@ -48,6 +52,17 @@ const Home = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  socket.on("ride-confirmed", (ride) => {
+    setRide(ride);
+    setIsWaitForDriverOpen(false);
+    setIsDriverDetailsOpen(true);
+  });
+
+  socket.on("ride-started", (ride) => {
+    setIsDriverDetailsOpen(false);
+    navigate("/riding", { state: { ride } }); // Updated navigate to include ride data
+  });
 
   // const handlePickupChange = async (e) => {
   //   const value = e.target.value;
@@ -340,7 +355,10 @@ const Home = () => {
           ref={driverDetailsRef}
           className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
         >
-          <DriverDetails setIsDriverDetailsOpen={setIsDriverDetailsOpen} />
+          <DriverDetails
+            ride={ride}
+            setIsDriverDetailsOpen={setIsDriverDetailsOpen}
+          />
         </div>
       </div>
     </div>

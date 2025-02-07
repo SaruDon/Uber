@@ -1,7 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FinishRide = (props) => {
+  const navigate = useNavigate();
+
+  async function endRide() {
+    try {
+      console.log("Hello");
+      console.log("props.rideData._id", props.rideData._id);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/ride/end-ride`,
+        {
+          rideId: props.rideData._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("response", response);
+      if (response.status === 200) {
+        navigate("/captain-home");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   return (
     <div className="h-screen flex flex-col items-center justify-center text-lg p-4">
       <img
@@ -17,10 +44,15 @@ const FinishRide = (props) => {
           alt="Driver"
         />
         <div className="px-4">
-          <h1 className="font-semibold text-lg">Sarvesh Khamkar</h1>
+          <h1 className="font-semibold text-lg">
+            {props?.rideData?.user?.fullname?.firstName || ""}
+            {props?.rideData?.user?.fullname?.lastName || ""}
+          </h1>
         </div>
         <div>
-          <h3 className="pl-4 font-semibold text-2xl">₹120.20</h3>
+          <h3 className="pl-4 font-semibold text-2xl">
+            ₹{props?.rideData?.fare.toFixed(1)}
+          </h3>
           <p className="pl-4 text-sm">5 Rs/km</p>
         </div>
       </div>
@@ -29,7 +61,7 @@ const FinishRide = (props) => {
           <i className="ri-map-pin-4-fill text-xl"></i>
           <div>
             <h3 className="text-xl font-semibold">562/11A</h3>
-            <h2 className="text-lg">Kaikondrahali, Bengaluru, Karnataka</h2>
+            <h2 className="text-lg">{props?.rideData?.pickup}</h2>
           </div>
         </div>
         <div className="border-t border-gray-300 my-2"></div>{" "}
@@ -38,7 +70,7 @@ const FinishRide = (props) => {
           <i className="ri-square-fill text-xl"></i>
           <div>
             <h3 className="text-xl font-semibold">562/11A</h3>
-            <h2 className="text-lg">Kaikondrahali, Bengaluru, Karnataka</h2>
+            <h2 className="text-lg">{props?.rideData?.destination}</h2>
           </div>
         </div>
         <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -47,39 +79,30 @@ const FinishRide = (props) => {
             <i className="ri-cash-line"></i>{" "}
           </h3>
           <div>
-            <h3 className="text-xl pt-2 font-semibold">₹193.20</h3>
+            <h3 className="text-xl pt-2 font-semibold">
+              ₹{props?.rideData?.fare.toFixed(1)}
+            </h3>
             <h2 className="text-lg">Cash</h2>
           </div>
         </div>
       </div>
 
-      <form action="">
-        <input
-          type="number"
-          placeholder="Enter OTP"
-          className="bg-[#eee] px-12 py-4 mt-5 mb-3 text-base rounded-lg w-full"
-        />
-
-        <div className="flex">
-          <button
-            onClick={() => {
-              props.setIsFinishRideOpen(false);
-            }}
-            className="bg-[#3d3d3d] w-1/2 text-white font-semibold rounded px-4 py-6 text-center"
-          >
-            <p className="text-red-400">Cancel</p>
-          </button>
-          <Link
-            to="/captain-riding"
-            onClick={() => {
-              props.setIsFinishRideOpen(false);
-            }}
-            className="bg-[#a5de64] w-1/2 ml-2 text-white font-semibold rounded px-4 py-4 flex items-center justify-center text-center"
-          >
-            Complete Ride
-          </Link>
-        </div>
-      </form>
+      <div className="flex">
+        <button
+          onClick={() => {
+            props.setIsFinishRideOpen(false);
+          }}
+          className="bg-[#3d3d3d] w-1/2 text-white font-semibold rounded px-4 py-6 text-center"
+        >
+          <p className="text-red-400">Cancel</p>
+        </button>
+        <button
+          onClick={endRide}
+          className="bg-[#a5de64] w-1/2 ml-2 text-white font-semibold rounded px-4 py-4 flex items-center justify-center text-center"
+        >
+          Complete Ride
+        </button>
+      </div>
       <div className="w-full max-w-md mt-4"></div>
     </div>
   );

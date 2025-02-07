@@ -9,13 +9,11 @@ import "remixicon/fonts/remixicon.css";
 import ConfimRidePopUp from "../components/ConfimRidePopUp";
 import { CaptainDataContext } from "../context/CaptainContext";
 import { SocketContext } from "../context/SocketContext";
-import { pick } from "../../node_modules/engine.io-client/build/esm-debug/util";
+import axios from "axios";
 
 const CaptainHome = () => {
   const [isRidePopUpOpen, setIsRidePopUpOpen] = useState(false);
 
-  const [pickUp, setpickUp] = useState("");
-  const [destination, setDestination] = useState("");
   const [ride, setRide] = useState();
 
   const ridePopUpRef = useRef(null);
@@ -31,13 +29,26 @@ const CaptainHome = () => {
 
   socket.on("new-ride", (data) => {
     console.log("data", data);
+    setRide(data);
     setIsRidePopUpOpen(true);
   });
 
-  useEffect(() => {
-    console.log("captain", captain);
-    if (!captain?._id) return;
+  async function confimRide() {
+    console.log("captain_id", captain._id);
+    console.log("ride.id", ride._id);
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/ride/confirm-ride`,
+      { rideId: ride._id, captainId: captain._id },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+  }
 
+  useEffect(() => {
+    if (!captain?._id) return;
     socket.emit("join", { userType: "captain", userId: captain._id });
 
     const updateLocation = () => {
@@ -121,6 +132,7 @@ const CaptainHome = () => {
         className="fixed translate-y-full bg-white w-full px-3 bottom-0 py-8"
       >
         <RidePopUp
+          confimRide={confimRide}
           ride={ride}
           setIsRidePopUpOpen={setIsRidePopUpOpen}
           setIsConfimRidePopupOpen={setIsConfimRidePopupOpen}
@@ -132,6 +144,8 @@ const CaptainHome = () => {
         className="fixed h-screen translate-y-full bg-white w-full px-3 bottom-0 py-8"
       >
         <ConfimRidePopUp
+          captain={captain}
+          ride={ride}
           setIsConfimRidePopupOpen={setIsConfimRidePopupOpen}
           setIsRidePopUpOpen={setIsRidePopUpOpen}
         />

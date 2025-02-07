@@ -5,9 +5,9 @@ const DriverDetails = (props) => {
     <div>
       <h5
         onClick={() => {
-          props.setIsDriverDetailsOpen(true);
+          props.setIsDriverDetailsOpen(false);
         }}
-        className="text-center "
+        className="text-center"
       >
         <i className="text-2xl ri-arrow-down-s-line"></i>
       </h5>
@@ -27,19 +27,37 @@ const DriverDetails = (props) => {
             />
           </div>
           <div className="px-3 text-right">
-            <h2 className="text-lg font-medium">Mangesh Dhonde</h2>
-            <h2 className="text-2xl font-semibold">MH 05 CM 0069</h2>
-            <h2 className="text-sm ">Swfit Dzire</h2>
+            <h2 className="text-lg font-medium">
+              {props?.ride?.captain?.fullname?.firstname}{" "}
+              {props?.ride?.captain?.fullname?.lastname}
+            </h2>
+            <h2 className="text-2xl font-semibold">
+              {props?.ride?.captain?.vehicle?.plate}
+            </h2>
+            <h2 className="text-sm ">
+              {props?.ride?.captain?.vehicle?.vehicleType}
+            </h2>
           </div>
         </div>
       </div>
-      <div className="flex flex-rows border-spacing-7 mt-3 m-1">
+      {/* Adding a container for OTP */}
+      <div className="flex flex-rows m-1 mt-3">
         <h3 className="font-medium text-xl p-5">
-          <i className="fron ri-map-pin-4-fill"></i>
+          <i className="ri-key-fill"></i>{" "}
+        </h3>
+        <div>
+          <h3 className="text-xl pt-2 font-semibold">OTP:</h3>
+          <h2 className="font-bold text-xl">{props?.ride?.otp}</h2>
+        </div>
+      </div>
+      <div className="border-t border-gray-300"></div> {/* Horizontal line */}
+      <div className="flex flex-rows m-1">
+        <h3 className="font-medium text-xl p-5">
+          <i className="ri-map-pin-4-fill"></i>
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold m-1">562/11A</h3>
-          <h2 className="text-lg">Kaikondrahali ,Bengluru, Karnataka</h2>
+          <h2 className="text-lg">{props?.ride?.pickup}</h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -49,10 +67,7 @@ const DriverDetails = (props) => {
         </h3>
         <div>
           <h3 className="text-xl pt-2 font-semibold">562/11A</h3>
-          <h2 className="text-lg">
-            Kaikondrahali ,Bengluru, Karnataka Kaikondrahali ,Bengluru,
-            Karnataka
-          </h2>
+          <h2 className="text-lg">{props?.ride?.destination}</h2>
         </div>
       </div>
       <div className="border-t border-gray-300"></div> {/* Horizontal line */}
@@ -61,7 +76,9 @@ const DriverDetails = (props) => {
           <i className="ri-cash-line"></i>{" "}
         </h3>
         <div>
-          <h3 className="text-xl pt-2 font-semibold">₹193.20</h3>
+          <h3 className="text-xl pt-2 font-semibold">
+            ₹{props?.ride?.fare.toFixed(1)}
+          </h3>
           <h2 className="text-lg">Cash</h2>
         </div>
       </div>

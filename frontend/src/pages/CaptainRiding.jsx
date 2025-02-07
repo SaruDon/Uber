@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FinishRide from "../components/FinishRide";
 import { useRef } from "react";
 import gsap from "gsap";
@@ -8,6 +8,8 @@ import { useGSAP } from "@gsap/react";
 const CaptainRiding = () => {
   const [isFinishRideOpen, setIsFinishRideOpen] = useState(false);
   const finishRideRef = useRef(null);
+  const location = useLocation();
+  const rideData = location.state?.ride;
 
   useGSAP(() => {
     if (isFinishRideOpen) {
@@ -42,7 +44,9 @@ const CaptainRiding = () => {
         />
       </div>
       <div className="h-1/6 w-screen p-1 my-1 rounded-full">
-        <h2 className="text-center text-3xl font-semibold">Lonavla Station</h2>
+        <h2 className="text-center text-3xl font-semibold">
+          {rideData?.destination}
+        </h2>
         <h4 className="text-center text-xl font-medium py-1 mb-2">4 Km away</h4>
         <button
           onClick={() => {
@@ -58,7 +62,10 @@ const CaptainRiding = () => {
         ref={finishRideRef}
         className="fixed h-screen translate-y-full bg-white w-full px-3 bottom-0 py-8"
       >
-        <FinishRide setIsFinishRideOpen={setIsFinishRideOpen} />
+        <FinishRide
+          rideData={rideData}
+          setIsFinishRideOpen={setIsFinishRideOpen}
+        />
       </div>
     </div>
   );

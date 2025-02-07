@@ -4,7 +4,6 @@ const VehiclePanel = (props) => {
   const submit = (e) => {
     props.setIsVehiclePanelOpen(false);
   };
-  console.log("props", props);
 
   return (
     <div>
