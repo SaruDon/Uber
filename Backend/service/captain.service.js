@@ -24,3 +24,19 @@ module.exports.createCaptain = async ({
   })
   return captain
 }
+
+module.exports.updateCaptainInfo = async ({ captain, fare }) => {
+  try {
+    // Increment the 'earning' field by the fare amount.
+    console.log('fare', fare)
+    const resp = await captainModel.findOneAndUpdate(
+      { _id: captain.id },
+      { $inc: { earning: fare } },
+      { new: true } // Return the updated document.
+    );
+    console.log('eraing updated', resp)
+    return resp;
+  } catch (err) {
+    throw new Error('Error updating captain info: ' + err.message);
+  }
+};

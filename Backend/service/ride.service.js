@@ -190,8 +190,10 @@ module.exports.startRide = async ({ rideId, otp, captain }) => {
 
 module.exports.endRide = async ({ rideId, captain }) => {
   if (!rideId) {
-      console.log('rideId Not present');
-      throw new Error('Ride id is required');
+      console.log('rideId Not present');{
+        
+      }
+      throw new Error('Ride id is required');{}
   }
 
   const ride = await rideModel.findOne({

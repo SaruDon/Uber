@@ -22,7 +22,9 @@ const CaptainDetails = () => {
           <h1>Basic Level</h1>
         </div>
         <div>
-          <h3 className="pl-4 font-semibold text-2xl">₹120.20</h3>
+          <h3 className="pl-4 font-semibold text-2xl">
+            ₹{captain?.earning.toFixed(1)}
+          </h3>
           <p className="pl-4">Eraning</p>
         </div>
       </div>

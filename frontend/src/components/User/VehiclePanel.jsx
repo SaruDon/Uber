@@ -43,7 +43,9 @@ const VehiclePanel = (props) => {
           <p className="font-medium text-l">Affordable,Compact rides</p>
         </div>
         <h2 className="text-2xl font-semibold">
-          {props.fare?.car !== undefined ? props.fare.car.toFixed(1) : "N/A"}
+          {props.fare?.car !== undefined
+            ? props.fare.car.toFixed(1)
+            : "Calculating Fare....."}
         </h2>{" "}
       </div>
 
@@ -73,7 +75,9 @@ const VehiclePanel = (props) => {
           <p className="font-medium text-l">Affordable moter cycle rides </p>
         </div>
         <h2 className="text-2xl font-semibold">
-          {props.fare?.bike !== undefined ? props.fare.bike.toFixed(1) : "N/A"}
+          {props.fare?.bike !== undefined
+            ? props.fare.bike.toFixed(1)
+            : "Calculating Fare"}
         </h2>{" "}
       </div>
 
@@ -103,7 +107,9 @@ const VehiclePanel = (props) => {
           <p className="font-medium text-l">Affordable auto cycle rides </p>
         </div>
         <h2 className="text-2xl font-semibold">
-          {props.fare?.auto !== undefined ? props.fare.auto.toFixed(1) : "N/A"}
+          {props.fare?.auto !== undefined
+            ? props.fare.auto.toFixed(1)
+            : "Calculating Fare"}
         </h2>{" "}
       </div>
     </div>

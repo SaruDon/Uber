@@ -3,6 +3,7 @@ const{validationResult} =require('express-validator')
 const mapService = require('../service/maps.service')
 const {sendMessageToSocketId} = require('../socket')
 const rideModel = require('../models/ride.model')
+const captainService = require('../service/captain.service')
 
 
 module.exports.createRide = async(req,res)=>{
@@ -123,6 +124,10 @@ module.exports.endRide = async (req, res) => {
 
   try {
     const ride =  await rideService.endRide({rideId,captain:req.captain})
+    console.log('ride.fare', ride.fare)
+    const fare = ride.fare
+
+    const captain = await captainService.updateCaptainInfo({captain:req.captain,fare})
 
     console.log('ride.user.socketId', ride.user.socketId)
 

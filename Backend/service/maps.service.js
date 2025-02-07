@@ -49,7 +49,7 @@ module.exports.getAddress = async (address) => {
     // Step 2: Use OSRM to get the snapped coordinate to the nearest road
     const responseOSRM = await axios.get(`${process.env.OSRM_NEAREST_URL}/${lon},${lat}`, {
       params: {
-        number: 5 // Return only the nearest match
+        number: 10 // Return only the nearest match
       }
     });
 

@@ -39,7 +39,9 @@ module.exports.getSuggestionsController =async (req,res, next)=>{
 
   try {
     const locations = await mapService.getAddress(address); 
-    res.status(200).json(locations);
+
+    const filteredLocation = locations.filter(location => location!=='') // removing empty resp
+    res.status(200).json(filteredLocation);
   } catch (error) {
     console.log('error.res', error)
     res.status(404).json({message:'Coordinate not found'});
