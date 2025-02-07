@@ -4,42 +4,44 @@ const jwt = require('jsonwebtoken');
 const blacklistTokenModel = require('../models/blacklistToken.model');
 const captainModel = require('../models/captain.model');
 
-
 module.exports.authUser = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = req.cookies.token || (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]);
+    // Extract token from either cookies or Authorization header
+    const authHeader = req.headers.authorization;
+    const token = req.cookies.token ||  (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]);
 
-  console.log('Received Token:', token);
 
-  if (!token) {
-      return res.status(401).json({ message: 'Unauthorized: No token provided' });
-  }
+    console.log('Received Token:', token);
 
-  // Check if the token is blacklisted i.e person is logged out 
-  const isBlacklisted = await blacklistTokenModel.findOne({ token });
-  console.log('Token Blacklisted:', isBlacklisted);
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    }
 
-  if (isBlacklisted) {
-      return res.status(401).json({ message: 'Unauthorized: Token is blacklisted' });
-  }
+    // Check if the token is blacklisted (user logged out)
+    const isBlacklisted = await blacklistTokenModel.findOne({ token });
+    console.log('Token Blacklisted:', isBlacklisted);
 
-  try {
-      console.log('Verifying Token:', token);
-      const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] }); // to get Id of user from jwt token after decoding token
-      console.log('Decoded Token:', decoded);
+    if (isBlacklisted) {
+        return res.status(401).json({ message: 'Unauthorized: Token is blacklisted' });
+    }
 
-      const user = await userModel.findById(decoded._id);
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    try {
+        // Verify and decode the JWT token to get user ID
+        // console.log('Verifying Token:', token);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] }); 
+        // console.log('Decoded Token:', decoded);
 
-      req.user = user;
-      return next();
+        // Find user based on decoded user ID from token
+        const user = await userModel.findById(decoded._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-  } catch (err) {
-      console.error('JWT Verification Error:', err.message);
-      return res.status(401).json({ message: `Unauthorized: ${err.message}` });
-  }
+        req.user = user;
+        return next();
+    } catch (err) {
+        console.error('JWT Verification Error:', err.message);
+        return res.status(401).json({ message: `Unauthorized: ${err.message}` });
+    }
 };
 
 

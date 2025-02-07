@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { UserDataContext } from "../context/UserContext";
 
 // Checks if User is login or not!
 const UserProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  const [user, setUser] = useState();
+  const { user, setUser } = useContext(UserDataContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const UserProtectWrapper = ({ children }) => {
           }
         );
         if (response.status === 200) {
-          setUser(response.data.user);
+          setUser(response.data);
         } else {
           throw new Error("Invalid res status");
         }

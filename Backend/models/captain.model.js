@@ -56,11 +56,11 @@ const captainSchema = new mongoose.Schema({
     vehicleType:{
       type:String,
       required:true,
-      enum: ['car', 'suv', 'motorcycle', 'auto', 'bus']
+      enum: ['car', 'suv', 'bike', 'auto', 'bus']
     }
   },
   location:{
-    lat:{
+    ltd:{
       type:Number,
      required:false,
     },
@@ -68,6 +68,10 @@ const captainSchema = new mongoose.Schema({
       type:Number,
       required:false,
     },
+  },
+  earning:{
+    type:Number,
+    default:0
   }
 })
 

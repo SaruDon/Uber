@@ -24,6 +24,7 @@ const CaptainLogin = () => {
       `${import.meta.env.VITE_BASE_URL}/captain/login`,
       captainData
     );
+
     if (response.status === 200) {
       console.log("response.data", response.data);
       const data = response.data;

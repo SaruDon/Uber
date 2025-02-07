@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext";
@@ -7,7 +7,7 @@ import axios from "axios";
 const CaptainProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const [captain, setCaptain] = useState(CaptainDataContext);
+  const { captain, setCaptain } = useContext(CaptainDataContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,9 @@ const CaptainProtectWrapper = ({ children }) => {
         );
 
         if (response.status === 200) {
-          setCaptain(response.data.captain);
+          setCaptain(response.data);
+          console.log("captainCapntainProtectedRoute", captain);
+          setIsLoading(false);
         } else {
           throw new Error("Invalid response status");
         }
